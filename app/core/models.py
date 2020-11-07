@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
 class UserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
         """Creates and saves a new user"""
-        user = self.model(email=email, **extra_fields)
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self.db)
 
@@ -63,7 +63,8 @@ class ZonaPagosParam(models.Model):
     """Zona Pagos Parameters"""
     code = models.SmallIntegerField()
     description = models.CharField(max_length=511)
-    payment = models.BooleanField(help_text="True: payment parameter , False: configuration parameter",
+    payment = models.BooleanField(help_text="True: payment parameter,"
+                                            " False: configuration parameter",
                                   default=False)
 
 
