@@ -35,6 +35,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
 
+class Customer(models.Model):
+    """Custom model that contains the buyer information"""
+    email = models.EmailField(max_length=255, unique=True)
+    document_type = models.CharField(max_length=255)
+    document = models.CharField(max_length=255)
+    name = models.CharField(max_length=127)
+    surname = models.CharField(max_length=127)
+    phone = models.BigIntegerField()
+    extra_field_1 = models.CharField(max_length=127)
+    extra_field_2 = models.CharField(max_length=127)
+    extra_field_3 = models.CharField(max_length=127)
+    extra_field_4 = models.CharField(max_length=127)
+    extra_field_5 = models.CharField(max_length=127)
+
+
 class PayGateWay(models.Model):
     """Payment gateway model that contains basic information"""
     site = models.ManyToManyField('User', related_name='payways')
