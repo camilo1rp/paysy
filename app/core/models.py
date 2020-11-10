@@ -77,7 +77,10 @@ class ZonaPagos(models.Model):
 
 class ZonaPagosConfig(models.Model):
     """Zona Pagos gateway config"""
-    int_id_comercio = models.PositiveIntegerField()
+    int_id_comercio = models.PositiveIntegerField(
+        help_text="Id given by Zona Virtual")
+    id_comercio = models.PositiveIntegerField(
+        help_text="Id given by Zona Pagos")
     str_usuario = models.CharField(max_length=255)
     str_clave = models.CharField(max_length=255)
     int_modalidad = models.SmallIntegerField(default=-1)
@@ -103,3 +106,24 @@ class ZonaPagosParamVal(models.Model):
                                          on_delete=models.CASCADE
                                          )
     value = models.CharField(max_length=255)
+
+
+class Transaction(models.Model):
+    """Transaction model"""
+    id_pago = models.CharField(max_length=255)
+    customer = models.ForeignKey('Customer',
+                                 on_delete=models.SET_NULL,
+                                 null=True,
+                                 related_name='transactions'
+                                 )
+    paygateway = models.ForeignKey('PayGateWay',
+                                   on_delete=models.SET_NULL,
+                                   null=True,
+                                   related_name='paygateways'
+                                   )
+    details = models.CharField(max_length=511, null=True, blank=True)
+    status = models.CharField(max_length=255, null=True, blank=True)
+    value = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    tex = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    pay_details = models.CharField(max_length=511)
