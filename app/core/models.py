@@ -69,10 +69,10 @@ class ZonaPagos(models.Model):
                                       null=True,
                                       related_name='zona_pagos'
                                       )
-    parameters = models.ManyToManyField('ZonaPagosParam',
-                                        through='ZonaPagosParamVal',
-                                        related_name='zona_pagos'
-                                        )
+    parameter = models.ManyToManyField('ZonaPagosParam',
+                                       through='ZonaPagosParamVal',
+                                       related_name='zona_pagos'
+                                       )
 
 
 class ZonaPagosConfig(models.Model):
@@ -103,7 +103,7 @@ class ZonaPagosParamVal(models.Model):
                                    on_delete=models.CASCADE
                                    )
     zona_pagos_param = models.ForeignKey('ZonaPagosParam',
-                                         on_delete=models.CASCADE
+                                         on_delete=models.CASCADE,
                                          )
     value = models.CharField(max_length=255)
 
@@ -116,14 +116,14 @@ class Transaction(models.Model):
                                  null=True,
                                  related_name='transactions'
                                  )
-    paygateway = models.ForeignKey('PayGateWay',
-                                   on_delete=models.SET_NULL,
-                                   null=True,
-                                   related_name='paygateways'
-                                   )
+    pay_gateway = models.ForeignKey('PayGateWay',
+                                    on_delete=models.SET_NULL,
+                                    null=True,
+                                    related_name='paygateways'
+                                    )
     details = models.CharField(max_length=511, null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
     value = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
-    tex = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+    tax = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     pay_details = models.CharField(max_length=511)
