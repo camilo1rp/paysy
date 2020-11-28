@@ -32,7 +32,7 @@ else
 
 python3 /app/manage.py shell << END
 from django.contrib.auth import get_user_model
-if not get_user_model().objects.filter(username='${DJANGO_SUPERUSER_MAIL}'):
+if not get_user_model().objects.filter(email='${DJANGO_SUPERUSER_MAIL}'):
   u=get_user_model().objects.create_super_user('${DJANGO_SUPERUSER_MAIL}', '${DJANGO_SUPERUSER_PASSWORD}')
 END
   echo "Superuser Username: ${DJANGO_SUPERUSER_MAIL}, E-mail: ${DJANGO_SUPERUSER_PASSWORD}"
