@@ -31,11 +31,11 @@ else
   fi
 
 python3 /app/manage.py shell << END
-from django.contrib.auth.models import User
-if not User.objects.filter(username='${DJANGO_SUPERUSER_NAME}'):
-  u=User.objects.create_superuser('${DJANGO_SUPERUSER_NAME}', '${DJANGO_SUPERUSER_MAIL}', '${DJANGO_SUPERUSER_PASSWORD}')
+from django.contrib.auth import get_user_model
+if not get_user_model().objects.filter(username='${DJANGO_SUPERUSER_MAIL}'):
+  u=get_user_model().objects.create_super_user('${DJANGO_SUPERUSER_MAIL}', '${DJANGO_SUPERUSER_PASSWORD}')
 END
-  echo "Superuser Username: ${DJANGO_SUPERUSER_NAME}, E-mail: ${DJANGO_SUPERUSER_MAIL}"
+  echo "Superuser Username: ${DJANGO_SUPERUSER_MAIL}, E-mail: ${DJANGO_SUPERUSER_PASSWORD}"
 fi
 
 python3 /app/manage.py collectstatic --noinput
