@@ -8,11 +8,13 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
-    command: >
-      sh -c "python manage.py wait_for_db &&
-            python manage.py migrate &&
-            python manage.py runserver 0.0.0.0:8000"
+      - app-media-files:/app/media/
+      - app-static-files:/app/static/
     environment:
+      - DJANGO_SUPERUSER_NAME=paysyadmin
+      - DJANGO_SUPERUSER_MAIL=paysyadmin@paysy.com
+      - DJANGO_SUPERUSER_PASSWORD=passwordTest123
+      - ALLOWED_HOST=localhost
       - DB_HOST=db
       - DB_NAME=app
       - DB_USER=postgres
@@ -28,3 +30,25 @@ services:
       - POSTGRES_PASSWORD=supersecretpassword
     ports:
       - "5432:5432"
+    volumes:
+      - postgres-vol:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:1.17.8-alpine
+    links:
+      - app
+    container_name: nginx_app
+    depends_on:
+      - app
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - app-media-files:/app/media/
+      - app-static-files:/app/static/
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+
+volumes:
+  postgres-vol:
+  app-static-files:
+  app-media-files:
