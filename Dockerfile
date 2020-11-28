@@ -8,6 +8,16 @@ COPY ./requirements.txt /requirements.txt
 RUN apk add --update --no-cache postgresql-client
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
         gcc libc-dev linux-headers postgresql-dev musl-dev zlib zlib-dev
+
+RUN apt-get update && apt-get install -qy \
+build-essential \
+libssl-dev \
+libffi-dev \
+python-dev
+# clean up apt cache to keep image size smaller
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/*
+
 RUN pip install -r /requirements.txt
 RUN apk del .tmp-build-deps
 
