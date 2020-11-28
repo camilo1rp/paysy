@@ -5,7 +5,7 @@ set -e
 export DJANGO_SUPERUSER_PASSWORD=passwordTest123
 export DJANGO_SUPERUSER_MAIL=paysyadmin@paysy.com
 export DB_PASSWORD=supersecretpassword
-export SECRET_KEY=[6d\va#)hx+4NSB4
+export SECRET_KEY=6dvahx4NSB4sdgtrehb
 
 # run db migrations (retry on error)
 while ! python3 /app/manage.py migrate 2>&1; do
