@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -qy \
 build-essential \
 libssl-dev \
 libffi-dev \
-python-dev
+python-dev \
 # clean up apt cache to keep image size smaller
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/*
