@@ -22,5 +22,5 @@ RUN chmod ug+x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 VOLUME ["/etc/paysy-nginx/"]
 # create user for running app (avoid using root for security)
-RUN adduser -D user
-USER user
+#RUN adduser -D user
+#USER user
