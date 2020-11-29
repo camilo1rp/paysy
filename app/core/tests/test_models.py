@@ -41,6 +41,7 @@ class ModelTests(TestCase):
         transaction = Transaction.objects.create(id_pago='test@paysy.com',
                                                  customer=buyer,
                                                  pay_gateway=gateway,
+                                                 config_name='zona_pagos',
                                                  details='transfer details',
                                                  status='surname',
                                                  value=134.34,
@@ -185,11 +186,13 @@ class ModelTests(TestCase):
                                               )
         zona_pagos = ZonaPagos.objects.create(gateway=gateway,
                                               configuration=config,
+                                              name='zona_pagos'
                                               )
         ZonaPagosParamVal.objects.create(zona_pagos=zona_pagos,
                                          zona_pagos_param=param,
                                          value="1")
         zona_pagos_db = ZonaPagos.objects.get(gateway=gateway,
                                               configuration=config,
+                                              name='zona_pagos'
                                               )
         self.assertEqual(zona_pagos, zona_pagos_db)

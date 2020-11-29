@@ -39,6 +39,7 @@ class FunctionTest(TestCase):
         self.transaction = Transaction.objects.create(id_pago='test@paysy.com',
                                                       customer=self.buyer,
                                                       pay_gateway=self.gateway,
+                                                      config_name='zona_pagos',
                                                       details='transfer '
                                                               'details',
                                                       status='surname',
@@ -48,34 +49,26 @@ class FunctionTest(TestCase):
                                                       pay_details="payment "
                                                                   "details",
                                                       )
-        self.param = ZonaPagosParam.objects.create(code=50,
-                                                   description='Código de '
-                                                               'servicio '
-                                                               'Personal: '
-                                                               'Define la '
-                                                               'configuración '
-                                                               'adicional '
-                                                               'que puede '
-                                                               'tener '
-                                                               'el comercio',
-                                                   payment=False
-                                                   )
-        self.config = ZonaPagosConfig. \
-            objects.create(int_id_comercio=30004,
-                           id_comercio=30004,
-                           str_usuario="Tn30004",
-                           str_clave="Tn30004*",
-                           int_modalidad=1,
-                           payment_url="https://www.zonapagos.com"
-                                       "/Apis_CicloPago"
-                                       "/api/InicioPago",
-                           consult_url="https://www.zonapagos.com"
-                                       "/Apis_CicloPago"
-                                       "/api "
-                                       "/VerificacionPago"
-                           )
+        self.param = ZonaPagosParam.objects.create(
+            code=50,
+            description='Código de servicio Personal: Define la onfiguración '
+                        'adicional que puede tener el comercio',
+            payment=False
+        )
+        self.config = ZonaPagosConfig.objects.create(
+            int_id_comercio=30004,
+            id_comercio=30004,
+            str_usuario="Tn30004",
+            str_clave="Tn30004*",
+            int_modalidad=1,
+            payment_url="https://www.zonapagos.com/"
+                        "Apis_CicloPago/api/InicioPago",
+            consult_url="https://www.zonapagos.com/"
+                        "Apis_CicloPago/apiVerificacionPago"
+        )
         self.zona_pagos = ZonaPagos.objects.create(gateway=self.gateway,
                                                    configuration=self.config,
+                                                   name='zona_pagos'
                                                    )
         ZonaPagosParamVal.objects.create(zona_pagos=self.zona_pagos,
                                          zona_pagos_param=self.param,
@@ -101,7 +94,6 @@ class FunctionTest(TestCase):
 
     def test_consume_zona_pagos_start_payment_api(self):
         """Test starting payment with Zona Pagos"""
-
         payment_payload = {
             "flt_total_con_iva": self.transaction.total,
             "flt_valor_iva": self.transaction.tax,
