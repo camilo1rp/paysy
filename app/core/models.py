@@ -37,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Customer(models.Model):
     """Custom model that contains the buyer information"""
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255)
     document_type = models.CharField(max_length=255)
     document = models.CharField(max_length=255)
     name = models.CharField(max_length=127)
@@ -60,6 +60,7 @@ class PayGateWay(models.Model):
 
 class ZonaPagos(models.Model):
     """Zona Pagos gateway setup"""
+    name = models.CharField(max_length=127, unique=True)
     gateway = models.ForeignKey('PayGateWay',
                                 on_delete=models.CASCADE,
                                 related_name='zona_pagos'
@@ -121,6 +122,7 @@ class Transaction(models.Model):
                                     null=True,
                                     related_name='paygateways'
                                     )
+    config_name = models.CharField(max_length=127)
     details = models.CharField(max_length=511, null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
     value = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
