@@ -2,7 +2,7 @@ FROM python:3.7-alpine as build
 MAINTAINER Camilo Romero
 
 # print output without buffering
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED 0
 
 COPY ./requirements.txt /requirements.txt
 RUN apk add --update --no-cache postgresql-client
