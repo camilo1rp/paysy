@@ -49,6 +49,9 @@ class Customer(models.Model):
     extra_field_4 = models.CharField(max_length=127)
     extra_field_5 = models.CharField(max_length=127)
 
+    def __str__(self):
+        return f'Customer: {self.name} {self.surname}, {self.email} '
+
 
 class PayGateWay(models.Model):
     """Payment gateway model that contains basic information"""
@@ -56,6 +59,9 @@ class PayGateWay(models.Model):
     name = models.CharField(max_length=255)
     prefix = models.CharField(max_length=4)
     is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'Gateway: {self.name}'
 
 
 class ZonaPagos(models.Model):
@@ -74,6 +80,9 @@ class ZonaPagos(models.Model):
                                        through='ZonaPagosParamVal',
                                        related_name='zona_pagos'
                                        )
+
+    def __str__(self):
+        return f'Zona Pagos: {self.name}'
 
 
 class ZonaPagosConfig(models.Model):
