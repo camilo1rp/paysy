@@ -39,14 +39,17 @@ class TransactionSerializer(serializers.ModelSerializer):
                   'total',
                   'tax',
                   'pay_details',
-                  'customer',
                   'pay_gateway',
-                  'config_name'
+                  'config_name',
+                  'status',
+                  'customer'
                   )
+        read_only_fields = ('status',)
         extra_kwargs = {'details': {'required': False},
                         'value': {'required': False},
                         'tax': {'required': False},
                         'total': {'required': False},
+                        'status': {'required': False,},
                         }
 
     def create(self, validated_data):

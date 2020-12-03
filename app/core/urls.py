@@ -7,6 +7,7 @@ from . import views
 router = DefaultRouter()
 router.register(r'start', views.StartPayment, basename='start_payment')
 router.register(r'paygateway', views.PayGateWayViewSet, basename='PayGateWay')
+router.register(r'zpconfirm', views.ZonaPagosConfirmView, basename='zpConfirm')
 
 app_name = 'payment'
 urlpatterns = [

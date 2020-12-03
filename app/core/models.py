@@ -120,7 +120,7 @@ class ZonaPagosParamVal(models.Model):
 
 class Transaction(models.Model):
     """Transaction model"""
-    id_pago = models.CharField(max_length=255)
+    id_pago = models.CharField(max_length=255, unique=True)
     customer = models.ForeignKey('Customer',
                                  on_delete=models.SET_NULL,
                                  null=True,
@@ -138,6 +138,8 @@ class Transaction(models.Model):
     tax = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     pay_details = models.CharField(max_length=511)
+    create_date = models.DateField(auto_now_add=True)
+    updated_date = models.DateField(auto_now=True)
 
     def __str__(self):
         return f'Transation: {self.id_pago}, {self.config_name}'
