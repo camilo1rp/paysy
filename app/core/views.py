@@ -1,7 +1,8 @@
 import requests
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework import viewsets
+from rest_framework import viewsets, views, status
+from rest_framework.views import APIView
 
 from core.models import Transaction, PayGateWay, Customer, ZonaPagos, \
     ZonaPagosParamVal
@@ -19,7 +20,9 @@ class StartPayment(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         trans = serializer.save()
-        customer = Customer.objects.get(**request.data['customer'])
+        customer, _ = Customer.objects.get_or_create(
+            **request.data['customer']
+        )
         zona_pagos = ZonaPagos.objects.get(gateway=trans.pay_gateway,
                                            name=trans.config_name)
 
@@ -72,3 +75,22 @@ class PayGateWayViewSet(viewsets.ModelViewSet):
     """Manage Api for starting payment"""
     queryset = PayGateWay.objects.all()
     serializer_class = PayGateWaySerializer
+
+
+class ZonaPagosConfirmView(viewsets.GenericViewSet):
+    """Zona pagos view to confirm payments"""
+
+    def list(self, request, *args, **kwargs):
+        id_comercio = request.GET.get('id_comercio')
+        id_pago = request.GET.get('id_pago')
+
+        if id_pago and id_comercio:
+            transaction = Transaction.objects.get(id_pago=id_pago)
+            transaction.status = "started"
+            data = TransactionSerializer(transaction).data
+            response = Response(data, status=status.HTTP_200_OK)
+            return response
+        else:
+            response = Response({'error': "check parameters"},
+                                status=status.HTTP_400_BAD_REQUEST)
+            return response
