@@ -87,6 +87,7 @@ class ZonaPagosConfirmView(viewsets.GenericViewSet):
         if id_pago and id_comercio:
             transaction = Transaction.objects.get(id_pago=id_pago)
             transaction.status = "started"
+            transaction.save()
             data = TransactionSerializer(transaction).data
             response = Response(data, status=status.HTTP_200_OK)
             return response
