@@ -2,5 +2,7 @@ Django>=3.1.3,<3.2.0
 djangorestframework>=3.12.1,<3.13.0
 psycopg2>=2.7.5,<2.8.0
 requests>=2.25.0,<2.26.0
+celery>=5.0.4,<5.1.0
+redis>=3.5.3,<3.6.0
 
 flake8>= 3.8.4,<3.9.0

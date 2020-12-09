@@ -18,8 +18,11 @@ services:
       - DB_NAME=app
       - DB_USER=postgres
       - DB_PASS=supersecretpassword
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:10-alpine
@@ -29,3 +32,28 @@ services:
       - POSTGRES_PASSWORD=supersecretpassword
     ports:
       - "5432:5432"
+
+  celery:
+    build: .
+    command: celery --app=paysy worker --loglevel=info
+    volumes:
+      - ./app:/app
+    depends_on:
+      - app
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery --app=paysy beat --loglevel=info
+    volumes:
+      - ./app:/app
+    links:
+      - celery
+    depends_on:
+      - app
+      - redis
+      - celery
+
+  redis:
+    image: "redis:alpine"
+    restart: on-failure
