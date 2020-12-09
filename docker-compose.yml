@@ -15,7 +15,6 @@ services:
       - DJANGO_SUPERUSER_NAME=paysyadmin
       - DJANGO_SUPERUSER_MAIL=paysyadmin@paysy.com
       - DJANGO_SUPERUSER_PASSWORD=passwordTest123
-      - ALLOWED_HOST=localhost
       - DB_HOST=db
       - DB_NAME=app
       - DB_USER=postgres
@@ -80,6 +79,7 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
   certbot:
     image: certbot/certbot
     volumes:
