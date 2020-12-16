@@ -20,9 +20,17 @@ class StartPayment(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         trans = serializer.save()
-        customer, _ = Customer.objects.get_or_create(
+        exists = Customer.objects.filter(
             **request.data['customer']
-        )
+        ).exists()
+        if not exists:
+            customer = Customer.objects.create(
+                **request.data['customer']
+            )
+        else:
+            customer = Customer.objects.get(
+                **request.data['customer']
+            )
         zona_pagos = ZonaPagos.objects.get(gateway=trans.pay_gateway,
                                            name=trans.config_name)
 
