@@ -22,6 +22,7 @@ services:
       - DB_PASS=supersecretpassword
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:10-alpine
@@ -58,6 +59,31 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  celery:
+    build: .
+    command: celery --app=paysy worker --loglevel=info
+    volumes:
+      - ./app:/app
+    depends_on:
+      - app
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery --app=paysy beat --loglevel=info
+    volumes:
+      - ./app:/app
+    links:
+      - celery
+    depends_on:
+      - app
+      - redis
+      - celery
+
+  redis:
+    image: "redis:alpine"
+    restart: on-failure
 
 volumes:
   postgres-vol:
