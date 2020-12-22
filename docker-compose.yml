@@ -67,7 +67,6 @@ services:
       - ./app:/app
       - postgres-vol:/var/lib/postgresql/data
     depends_on:
-      - app
       - redis
       - db
     environment:
@@ -84,7 +83,6 @@ services:
     links:
       - celery
     depends_on:
-      - app
       - redis
       - celery
       - db
