@@ -5,6 +5,8 @@ services:
     build:
       context: .
     image: paysy
+    expose:
+      - "8000"
     ports:
       - "8000:8000"
     volumes:
@@ -78,8 +80,6 @@ services:
       - DB_NAME=app
       - DB_PASS=supersecretpassword
       - DB_USER=postgres
-      - PORT=5432
-
 
   celery-beat:
     build: .
