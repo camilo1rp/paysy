@@ -60,6 +60,7 @@ services:
       - ./certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
+
   celery:
     build: .
     command: celery --app=paysy worker --loglevel=info
@@ -68,6 +69,13 @@ services:
     depends_on:
       - app
       - redis
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_PASS=supersecretpassword
+      - DB_USER=postgres
+
 
   celery-beat:
     build: .

@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from celery import shared_task
-
+from django.core.management import call_command
 from paysy.celery import app
 
 
@@ -10,14 +10,15 @@ def add(x, y):
     return x + y
 
 
-@app.task
+@shared_task
 def check():
-    print("I am checking your stuff")
+    print("updating transactions")
+    call_command("sonda_transactions", )
 
 
 app.conf.beat_schedule = {
     "run-me-every-ten-seconds": {
         "task": "core.tasks.check",
-        "schedule": 10.0
+        "schedule": 30.0
     }
 }
