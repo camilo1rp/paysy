@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: .
+    entrypoint: /docker-entrypoint.sh
     image: paysy
     ports:
       - "8000:8000"
@@ -69,6 +70,7 @@ services:
     depends_on:
       - redis
       - db
+      - app
     environment:
       - DB_HOST=db
       - DB_NAME=app
@@ -86,6 +88,7 @@ services:
       - redis
       - celery
       - db
+      - app
     environment:
       - DB_HOST=db
       - DB_NAME=app
@@ -100,3 +103,70 @@ volumes:
   postgres-vol:
   app-static-files:
   app-media-files:
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+    image: paysy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+    command: >
+      sh -c "python manage.py wait_for_db &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_USER=postgres
+      - DB_PASS=supersecretpassword
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecretpassword
+    ports:
+      - "5432:5432"
+
+
+  celery:
+    build: .
+    command: celery --app=paysy worker --loglevel=info
+    volumes:
+      - ./app:/app
+    depends_on:
+      - app
+      - redis
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_PASS=supersecretpassword
+      - DB_USER=postgres
+
+
+  celery-beat:
+    build: .
+    command: celery --app=paysy beat --loglevel=info
+    volumes:
+      - ./app:/app
+    links:
+      - celery
+    depends_on:
+      - app
+      - redis
+      - celery
+
+  redis:
+    image: "redis:alpine"
+    restart: on-failure
