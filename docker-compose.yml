@@ -60,39 +60,39 @@ services:
       - ./certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
-  celery:
-    build: .
-    command: celery --app=paysy worker --loglevel=info
-    volumes:
-      - ./app:/app
-      - postgres-vol:/var/lib/postgresql/data
-    depends_on:
-      - redis
-      - db
-      - app
-    environment:
-      - DB_HOST=db
-      - DB_NAME=app
-      - DB_PASS=supersecretpassword
-      - DB_USER=postgres
-
-  celery-beat:
-    build: .
-    command: celery --app=paysy beat --loglevel=info
-    volumes:
-      - ./app:/app
-    links:
-      - celery
-    depends_on:
-      - redis
-      - celery
-      - db
-      - app
-    environment:
-      - DB_HOST=db
-      - DB_NAME=app
-      - DB_PASS=supersecretpassword
-      - DB_USER=postgres
+#  celery:
+#    build: .
+#    command: celery --app=paysy worker --loglevel=info
+#    volumes:
+#      - ./app:/app
+#      - postgres-vol:/var/lib/postgresql/data
+#    depends_on:
+#      - redis
+#      - db
+#      - app
+#    environment:
+#      - DB_HOST=db
+#      - DB_NAME=app
+#      - DB_PASS=supersecretpassword
+#      - DB_USER=postgres
+#
+#  celery-beat:
+#    build: .
+#    command: celery --app=paysy beat --loglevel=info
+#    volumes:
+#      - ./app:/app
+#    links:
+#      - celery
+#    depends_on:
+#      - redis
+#      - celery
+#      - db
+#      - app
+#    environment:
+#      - DB_HOST=db
+#      - DB_NAME=app
+#      - DB_PASS=supersecretpassword
+#      - DB_USER=postgres
 
   redis:
     image: "redis:alpine"
