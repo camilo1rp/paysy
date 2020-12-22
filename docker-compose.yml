@@ -65,6 +65,7 @@ services:
     command: celery --app=paysy worker --loglevel=info
     volumes:
       - ./app:/app
+      - postgres-vol:/var/lib/postgresql/data
     depends_on:
       - app
       - redis
@@ -77,7 +78,7 @@ services:
 
   celery-beat:
     build: .
-    command: celery --app=paysy beat --loglevel=info --port=8888
+    command: celery --app=paysy beat --loglevel=info
     volumes:
       - ./app:/app
     links:
