@@ -55,7 +55,13 @@ class TransactionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create customer and transaction instances"""
         customer_data = validated_data.pop('customer')
-        customer = Customer.objects.create(**customer_data)
+        exists = Customer.objects.filter(**customer_data).exists()
+        if not exists:
+            customer = Customer.objects.create(**customer_data)
+        else:
+            customer = Customer.objects.get(
+                **customer_data
+            )
         validated_data['customer'] = customer
         trans = Transaction.objects.create(**validated_data)
         return trans

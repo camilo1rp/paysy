@@ -5,7 +5,7 @@ from rest_framework import viewsets, views, status
 from rest_framework.views import APIView
 
 from core.models import Transaction, PayGateWay, Customer, ZonaPagos, \
-    ZonaPagosParamVal
+    ZonaPagosParamVal, TransactionStatus
 from core.serializers import TransactionSerializer, \
     PayGateWaySerializer
 
@@ -94,8 +94,11 @@ class ZonaPagosConfirmView(viewsets.GenericViewSet):
 
         if id_pago and id_comercio:
             transaction = Transaction.objects.get(id_pago=id_pago)
-            transaction.status = "started"
+            transaction.status = "pending"
             transaction.save()
+            TransactionStatus.objects.create(transaction=transaction,
+                                             status=transaction.status,
+                                             details="pago hecho")
             data = TransactionSerializer(transaction).data
             response = Response(data, status=status.HTTP_200_OK)
             return response

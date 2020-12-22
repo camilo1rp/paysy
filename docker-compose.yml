@@ -33,6 +33,7 @@ services:
     ports:
       - "5432:5432"
 
+
   celery:
     build: .
     command: celery --app=paysy worker --loglevel=info
@@ -41,6 +42,13 @@ services:
     depends_on:
       - app
       - redis
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_PASS=supersecretpassword
+      - DB_USER=postgres
+
 
   celery-beat:
     build: .

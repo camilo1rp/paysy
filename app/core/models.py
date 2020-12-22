@@ -66,6 +66,7 @@ class PayGateWay(models.Model):
 
 class ZonaPagos(models.Model):
     """Zona Pagos gateway setup"""
+
     name = models.CharField(max_length=127, unique=True)
     gateway = models.ForeignKey('PayGateWay',
                                 on_delete=models.CASCADE,
@@ -80,6 +81,10 @@ class ZonaPagos(models.Model):
                                        through='ZonaPagosParamVal',
                                        related_name='zona_pagos'
                                        )
+
+
+    class Meta:
+        verbose_name_plural: 'Zona Pagos'
 
     def __str__(self):
         return f'Zona Pagos: {self.name}'
@@ -97,6 +102,9 @@ class ZonaPagosConfig(models.Model):
     payment_url = models.CharField(max_length=255)
     consult_url = models.CharField(max_length=255)
 
+    def __str__(self):
+        return f'Zona Pagos Config: {self.int_id_comercio}'
+
 
 class ZonaPagosParam(models.Model):
     """Zona Pagos Parameters"""
@@ -105,6 +113,9 @@ class ZonaPagosParam(models.Model):
     payment = models.BooleanField(help_text="True: payment parameter,"
                                             " False: configuration parameter",
                                   default=False)
+
+    def __str__(self):
+        return f'Code: {self.code}'
 
 
 class ZonaPagosParamVal(models.Model):
@@ -116,6 +127,9 @@ class ZonaPagosParamVal(models.Model):
                                          on_delete=models.CASCADE,
                                          )
     value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.zona_pagos_param}: {self.value}'
 
 
 class Transaction(models.Model):
@@ -141,6 +155,22 @@ class Transaction(models.Model):
     create_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
 
+    def __str__(self):
+        return f'Transaction: {self.id_pago}'
 
-# class TransactionProbe(models.Model):
-#     """Probe Model for transaction state"""
+
+class TransactionStatus(models.Model):
+    """Transaction status"""
+    transaction = models.ForeignKey('Transaction',
+                                    on_delete=models.CASCADE,
+                                    related_name='statustrans'
+                                    )
+    status = models.CharField(max_length=63)
+    details = models.CharField(max_length=511)
+    created_date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural: 'Transaction Status'
+
+    def __str__(self):
+        return f'{self.transaction}: {self.status}'
