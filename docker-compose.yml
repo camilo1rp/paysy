@@ -5,8 +5,6 @@ services:
     build:
       context: .
     image: paysy
-    expose:
-      - "8000"
     ports:
       - "8000:8000"
     volumes:
@@ -33,7 +31,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=supersecretpassword
     ports:
-      - "5432"
+      - "5432:5432"
     volumes:
       - postgres-vol:/var/lib/postgresql/data
 
@@ -62,7 +60,6 @@ services:
       - ./certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
-
   celery:
     build: .
     command: celery --app=paysy worker --loglevel=info
@@ -72,9 +69,6 @@ services:
       - app
       - redis
       - db
-    links:
-      - db
-      - app
     environment:
       - DB_HOST=db
       - DB_NAME=app
@@ -88,8 +82,6 @@ services:
       - ./app:/app
     links:
       - celery
-      - db
-      - app
     depends_on:
       - app
       - redis
