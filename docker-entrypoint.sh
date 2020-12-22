@@ -39,8 +39,8 @@ END
 fi
 
 python3 /app/manage.py collectstatic --noinput
-celery --app=paysy beat --loglevel=info
-celery --app=paysy worker --loglevel=info
+celery --app=paysy beat --loglevel=info &
+celery --app=paysy worker --loglevel=info &
 #move to app directory
 cd /app/
 
