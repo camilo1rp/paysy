@@ -72,6 +72,7 @@ services:
       - db
     links:
       - db
+      - app
     environment:
       - DB_HOST=db
       - DB_NAME=app
