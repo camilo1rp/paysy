@@ -4,7 +4,6 @@ services:
   app:
     build:
       context: .
-    entrypoint: /docker-entrypoint.sh
     image: paysy
     ports:
       - "8000:8000"

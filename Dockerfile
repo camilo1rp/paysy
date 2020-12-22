@@ -18,11 +18,11 @@ RUN mkdir /app
 WORKDIR /app
 COPY ./app /app
 
-#FROM projectClone as entrypoint
-#COPY docker-entrypoint.sh /docker-entrypoint.sh
-#RUN chmod ug+x /docker-entrypoint.sh
-#ENTRYPOINT ["/docker-entrypoint.sh"]
-#VOLUME ["/etc/paysy-nginx/"]
+FROM projectClone as entrypoint
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod ug+x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
+VOLUME ["/etc/paysy-nginx/"]
 # create user for running app (avoid using root for security)
 #RUN adduser -D user
 #USER user
