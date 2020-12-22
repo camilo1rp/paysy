@@ -88,6 +88,7 @@ services:
     links:
       - celery
       - db
+      - app
     depends_on:
       - app
       - redis
