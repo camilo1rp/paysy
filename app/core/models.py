@@ -137,7 +137,7 @@ class ZonaPagosParamVal(models.Model):
     value = models.CharField(max_length=255)
 
     class Meta:
-        verbose_name_plural = "Zona Pagos parameters velues"
+        verbose_name_plural = "Zona Pagos parameters values"
 
     def __str__(self):
         return f'{self.zona_pagos_param}: {self.value}'
