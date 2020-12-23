@@ -49,7 +49,7 @@ class Command(BaseCommand):
                 pagos_str = data['str_res_pago']
                 pagos_split = pagos_str.split(' ; ')[:-1]
                 res_status = ""
-
+                pago_finished = ''
                 for pago in pagos_split:
                     pago_split = pago.split(' | ')
                     pago_finished = pago_split[3]
@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 status_current = status[res_status]
                 if status_current == 'pending':
                     time_compare = trans.create_date + \
-                                   datetime.timedelta(seconds=2000)
+                                   datetime.timedelta(seconds=60)
                     if time_compare < timezone.now() and pago_finished == '1':
                         status_current = 'rejected - timeout'
 
