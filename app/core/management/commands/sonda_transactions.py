@@ -52,13 +52,14 @@ class Command(BaseCommand):
 
                 for pago in pagos_split:
                     pago_split = pago.split(' | ')
+                    pago_finished = pago_split[3]
                     res_status = pago_split[4]
 
                 status_current = status[res_status]
                 if status_current == 'pending':
                     time_compare = trans.create_date + \
-                                   datetime.timedelta(seconds=700)
-                    if time_compare < timezone.now():
+                                   datetime.timedelta(seconds=2000)
+                    if time_compare < timezone.now() and pago_finished == '1':
                         status_current = 'rejected - timeout'
 
                 trans.status = status_current
