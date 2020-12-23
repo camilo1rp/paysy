@@ -142,7 +142,7 @@ class ZonaPagosTest(View):
             # if root == '127.0.0.1:8000':
             #     url = f"http://{root}/payment/start/"
             # else:
-            url = f"https://pasarela.tncolombia.com.co/payment/start/"
+            url = f"http://127.0.0.1:8000/payment/start/"
             headers = {'Content-Type': 'application/json; charset=utf-8'}
             response = requests.post(url,
                                      headers=headers,
