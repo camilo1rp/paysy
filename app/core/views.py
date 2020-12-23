@@ -26,6 +26,8 @@ class StartPayment(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         trans = serializer.save()
+        trans.status = 'pending'
+        trans.save()
         exists = Customer.objects.filter(
             **request.data['customer']
         ).exists()
