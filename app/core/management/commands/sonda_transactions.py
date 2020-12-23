@@ -2,6 +2,7 @@ import datetime
 import requests
 
 from django.core.management import BaseCommand
+from django.utils import timezone
 from rest_framework.renderers import JSONRenderer
 
 from core.models import Transaction, ZonaPagos, TransactionStatus
@@ -14,6 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         transactions = Transaction.objects.filter(status='pending')
         if transactions:
+            print("Transactions pending found")
             for trans in transactions:
                 zona_pagos = ZonaPagos.objects.get(gateway=trans.pay_gateway,
                                                    name=trans.config_name)
@@ -44,15 +46,30 @@ class Command(BaseCommand):
                           '1001': 'Error between ACH and bank',
                           '1002': 'rejected',
                           }
-                trans_status = str(data['int_estado'])
-                trans.status = status[trans_status]
+                pagos_str = data['str_res_pago']
+                pagos_split = pagos_str.split(' ; ')[:-1]
+                res_status = ""
+
+                for pago in pagos_split:
+                    pago_split = pago.split(' | ')
+                    res_status = pago_split[4]
+
+                status_current = status[res_status]
+                if status_current == 'pending':
+                    time_compare = trans.create_date + \
+                                   datetime.timedelta(seconds=700)
+                    if time_compare < timezone.now():
+                        status_current = 'rejected - timeout'
+
+                trans.status = status_current
                 trans.details = data['str_detalle']
                 trans.save()
 
                 status_trans, _ = TransactionStatus.objects.get_or_create(
                     transaction=trans,
-                    status=status[trans_status],
-                    details=data['str_detalle'])
+                    status=status_current,
+                    details=data['str_detalle']
+                )
                 status_trans.create_date = datetime.datetime.now()
                 status_trans.save()
-        print("Transactions' status updated")
+        print("Transactions updated")

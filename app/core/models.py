@@ -60,6 +60,9 @@ class PayGateWay(models.Model):
     prefix = models.CharField(max_length=4)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name_plural = "Payment Gateways"
+
     def __str__(self):
         return f'Gateway: {self.name}'
 
@@ -81,9 +84,8 @@ class ZonaPagos(models.Model):
                                        related_name='zona_pagos'
                                        )
 
-
     class Meta:
-        verbose_name_plural: 'Zona Pagos'
+        verbose_name_plural = 'Zona Pagos'
 
     def __str__(self):
         return f'Zona Pagos: {self.name}'
@@ -101,6 +103,9 @@ class ZonaPagosConfig(models.Model):
     payment_url = models.CharField(max_length=255)
     consult_url = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = "Zona Pagos Configurations"
+
     def __str__(self):
         return f'Zona Pagos Config: {self.int_id_comercio}'
 
@@ -112,6 +117,9 @@ class ZonaPagosParam(models.Model):
     payment = models.BooleanField(help_text="True: payment parameter,"
                                             " False: configuration parameter",
                                   default=False)
+
+    class Meta:
+        verbose_name_plural = "Zona Pagos parameters"
 
     def __str__(self):
         return f'Code: {self.code}'
@@ -126,6 +134,9 @@ class ZonaPagosParamVal(models.Model):
                                          on_delete=models.CASCADE,
                                          )
     value = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name_plural = "Zona Pagos parameters values"
 
     def __str__(self):
         return f'{self.zona_pagos_param}: {self.value}'
@@ -151,8 +162,8 @@ class Transaction(models.Model):
     tax = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     pay_details = models.CharField(max_length=511)
-    create_date = models.DateField(auto_now_add=True)
-    updated_date = models.DateField(auto_now=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'Transaction: {self.id_pago}'
@@ -166,10 +177,10 @@ class TransactionStatus(models.Model):
                                     )
     status = models.CharField(max_length=63)
     details = models.CharField(max_length=511)
-    created_date = models.DateField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural: 'Transaction Status'
+        verbose_name_plural = "Transaction Status"
 
     def __str__(self):
         return f'{self.transaction}: {self.status}'

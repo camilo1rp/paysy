@@ -17,8 +17,8 @@ def check():
 
 
 app.conf.beat_schedule = {
-    "run-me-every-ten-seconds": {
+    "run-this-every-five-minutes": {
         "task": "core.tasks.check",
-        "schedule": 30.0
+        "schedule": 300.0
     }
 }
