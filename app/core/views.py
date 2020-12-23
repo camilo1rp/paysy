@@ -138,10 +138,11 @@ class ZonaPagosTest(View):
                        }
             serialized_json = JSONRenderer().render(payload)
             root = request.META['HTTP_HOST']
-            if root == '127.0.0.1:8000':
-                url = f"http://{root}/payment/start/"
-            else:
-                url = f"https://{root}/payment/start/"
+            print(f'***********this is the domain: {root}')
+            # if root == '127.0.0.1:8000':
+            #     url = f"http://{root}/payment/start/"
+            # else:
+            url = f"https://pasarela.tncolombia.com.co/payment/start/"
             headers = {'Content-Type': 'application/json; charset=utf-8'}
             response = requests.post(url,
                                      headers=headers,
