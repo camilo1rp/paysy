@@ -1,13 +1,19 @@
 import requests
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.views.generic import FormView, ListView
+from django.views.generic.base import View
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework import viewsets, views, status
 from rest_framework.views import APIView
 
+from core.forms import PaymentForm
 from core.models import Transaction, PayGateWay, Customer, ZonaPagos, \
     ZonaPagosParamVal, TransactionStatus
 from core.serializers import TransactionSerializer, \
     PayGateWaySerializer
+from paysy import settings
 
 
 class StartPayment(viewsets.ModelViewSet):
@@ -106,3 +112,53 @@ class ZonaPagosConfirmView(viewsets.GenericViewSet):
             response = Response({'error': "check parameters"},
                                 status=status.HTTP_400_BAD_REQUEST)
             return response
+
+
+class ZonaPagosTest(View):
+
+    def post(self, request):
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            print(cd)
+            payload = {"id_pago": cd['id_pago'],
+                       "pay_gateway": cd['pay_gateway'].id,
+                       "tax": cd['tax'],
+                       "total": cd['total'],
+                       "config_name": cd['config_name'].name,
+                       "pay_details": cd['pay_details'],
+                       "customer": {
+                           "email": cd['email'],
+                           "document_type": cd['document_type'],
+                           "document": cd['document'],
+                           "name": cd['name'],
+                           "surname": cd['surname'],
+                           "phone": cd['phone']
+                       }
+                       }
+            serialized_json = JSONRenderer().render(payload)
+            root = request.META['HTTP_HOST']
+            if root == '127.0.0.1:8000':
+                url = f"http://{root}/payment/start/"
+            else:
+                url = f"https://{root}/payment/start/"
+            headers = {'Content-Type': 'application/json; charset=utf-8'}
+            response = requests.post(url,
+                                     headers=headers,
+                                     data=serialized_json)
+            data = response.json()
+            pay_url = data.pop('str_url', False)
+            if pay_url:
+                return HttpResponseRedirect(pay_url)
+            return render(request,
+                          "tests/zona_start.html",
+                          {'form': form, 'error':data})
+    def get(self, request):
+        form = PaymentForm
+        return render(request, "tests/zona_start.html", {'form': form})
+
+
+class ZonaPagosList(ListView):
+    model = Transaction
+    paginate_by = 100
+    template_name = "tests/zona_list.html"
