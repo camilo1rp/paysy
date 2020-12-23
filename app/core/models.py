@@ -60,6 +60,9 @@ class PayGateWay(models.Model):
     prefix = models.CharField(max_length=4)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name_plural = "Payment Gateways"
+
     def __str__(self):
         return f'Gateway: {self.name}'
 
@@ -83,7 +86,7 @@ class ZonaPagos(models.Model):
                                        )
 
     class Meta:
-        verbose_name_plural: 'Zona Pagos'
+        verbose_name_plural = 'Zona Pagos'
 
     def __str__(self):
         return f'Zona Pagos: {self.name}'
@@ -101,6 +104,9 @@ class ZonaPagosConfig(models.Model):
     payment_url = models.CharField(max_length=255)
     consult_url = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = "Zona Pagos Configurations"
+
     def __str__(self):
         return f'Zona Pagos Config: {self.int_id_comercio}'
 
@@ -112,6 +118,9 @@ class ZonaPagosParam(models.Model):
     payment = models.BooleanField(help_text="True: payment parameter,"
                                             " False: configuration parameter",
                                   default=False)
+
+    class Meta:
+        verbose_name_plural = "Zona Pagos parameters"
 
     def __str__(self):
         return f'Code: {self.code}'
@@ -126,6 +135,9 @@ class ZonaPagosParamVal(models.Model):
                                          on_delete=models.CASCADE,
                                          )
     value = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name_plural = "Zona Pagos parameters velues"
 
     def __str__(self):
         return f'{self.zona_pagos_param}: {self.value}'
@@ -169,7 +181,7 @@ class TransactionStatus(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural: 'Transaction Status'
+        verbose_name_plural = "Transaction Status"
 
     def __str__(self):
         return f'{self.transaction}: {self.status}'
