@@ -143,7 +143,7 @@ class CustomerDetailView(viewsets.GenericViewSet):
     def list(self, request, *args, **kwargs):
         id_customer = request.GET.get('id_customer')
         try:
-            customer = Transaction.objects.get(id=id_customer)
+            customer = Customer.objects.get(id=id_customer)
         except:
             customer = False
         if customer:

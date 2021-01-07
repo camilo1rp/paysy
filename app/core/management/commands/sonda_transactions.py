@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 status_current = status[res_status]
                 if status_current == 'pending':
                     time_compare = trans.create_date + \
-                                   datetime.timedelta(seconds=60)
+                                   datetime.timedelta(seconds=120)
                     if time_compare < timezone.now() and pago_finished == '1':
                         status_current = 'rejected - timeout'
 
