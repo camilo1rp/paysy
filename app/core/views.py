@@ -12,11 +12,11 @@ from core.forms import PaymentForm
 from core.models import Transaction, PayGateWay, Customer, ZonaPagos, \
     ZonaPagosParamVal, TransactionStatus
 from core.serializers import TransactionSerializer, \
-    PayGateWaySerializer
+    PayGateWaySerializer, CustomerSerializer
 from paysy import settings
 
 
-class StartPayment(viewsets.ModelViewSet):
+class ZPStartPayment(viewsets.ModelViewSet):
     """Manage Api for starting payment"""
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -116,6 +116,47 @@ class ZonaPagosConfirmView(viewsets.GenericViewSet):
             return response
 
 
+class TransactionStatusView(viewsets.GenericViewSet):
+    """Zona pagos get transaction"""
+
+    def list(self, request, *args, **kwargs):
+        # id_customer = request.GET.get('id_customer')
+        id_pago = request.GET.get('id_pago')
+        try:
+            transaction = Transaction.objects.get(id_pago=id_pago)
+        except:
+            transaction = False
+        if transaction:
+            data = TransactionSerializer(transaction).data
+            response = Response(data, status=status.HTTP_200_OK)
+            return response
+        else:
+            response = Response({'error': "transaction not found."
+                                          "check parameters"},
+                                status=status.HTTP_400_BAD_REQUEST)
+            return response
+
+
+class CustomerDetailView(viewsets.GenericViewSet):
+    """Get customer's details"""
+
+    def list(self, request, *args, **kwargs):
+        id_customer = request.GET.get('id_customer')
+        try:
+            customer = Transaction.objects.get(id=id_customer)
+        except:
+            customer = False
+        if customer:
+            data = CustomerSerializer(customer).data
+            response = Response(data, status=status.HTTP_200_OK)
+            return response
+        else:
+            response = Response({'error': "Customer not found."
+                                          "check parameter"},
+                                status=status.HTTP_400_BAD_REQUEST)
+            return response
+
+
 class ZonaPagosTest(View):
 
     def post(self, request):
@@ -144,7 +185,9 @@ class ZonaPagosTest(View):
             # if root == '127.0.0.1:8000':
             #     url = f"http://{root}/payment/start/"
             # else:
-            url = "https://pasarela.tncolombia.com.co/payment/start/"
+            # url = "https://pasarela.tncolombia.com.co/payment/zpstart/"
+            url = "http://127.0.0.1:8000payment/zpstart/"
+            headers = {'Content-Type': 'application/json; charset=utf-8'}
             headers = {'Content-Type': 'application/json; charset=utf-8'}
             response = requests.post(url,
                                      headers=headers,
@@ -155,7 +198,8 @@ class ZonaPagosTest(View):
                 return HttpResponseRedirect(pay_url)
             return render(request,
                           "tests/zona_start.html",
-                          {'form': form, 'error':data})
+                          {'form': form, 'error': data})
+
     def get(self, request):
         form = PaymentForm
         return render(request, "tests/zona_start.html", {'form': form})

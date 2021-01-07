@@ -5,9 +5,13 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r'start', views.StartPayment, basename='start_payment')
+router.register(r'zpstart', views.ZPStartPayment, basename='start_payment')
 router.register(r'paygateway', views.PayGateWayViewSet, basename='PayGateWay')
 router.register(r'zpconfirm', views.ZonaPagosConfirmView, basename='zpConfirm')
+router.register(r'transtatus', views.TransactionStatusView,
+                basename='transtatus')
+router.register(r'customerDetails', views.CustomerDetailView,
+                basename='customerDetails')
 
 app_name = 'payment'
 urlpatterns = [
