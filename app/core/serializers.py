@@ -17,7 +17,8 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = '__all__'
-        extra_kwargs = {'extra_field_1': {'required': False},
+        extra_kwargs = {'surname': {'required': False},
+                        'extra_field_1': {'required': False},
                         'extra_field_2': {'required': False},
                         'extra_field_3': {'required': False},
                         'extra_field_4': {'required': False},
