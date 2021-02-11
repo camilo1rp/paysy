@@ -26,8 +26,11 @@ class ZPStartPayment(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         trans = serializer.save()
-        trans.status = 'pending'
+        trans.status = 'started'
         trans.save()
+        TransactionStatus.objects.create(transaction=trans,
+                                         status=trans.status,
+                                         details="Transación Iniciada")
         exists = Customer.objects.filter(
             **request.data['customer']
         ).exists()
@@ -106,7 +109,7 @@ class ZonaPagosConfirmView(viewsets.GenericViewSet):
             transaction.save()
             TransactionStatus.objects.create(transaction=transaction,
                                              status=transaction.status,
-                                             details="pago hecho")
+                                             details="Transación en progreso")
             data = TransactionSerializer(transaction).data
             response = Response(data, status=status.HTTP_200_OK)
             return response
