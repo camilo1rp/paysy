@@ -38,7 +38,7 @@ class Command(BaseCommand):
                           '200': 'started',
                           '777': 'declined',
                           '888': 'pending',
-                          '999': 'pending',
+                          '999': 'pending', # banco no ha dado respuesta
                           '4001': 'pending',
                           '4000': 'rejected CR',
                           '4003': 'error CR',
