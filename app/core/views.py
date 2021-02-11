@@ -51,13 +51,13 @@ class ZPStartPayment(viewsets.ModelViewSet):
             "str_id_cliente": str(customer.id),
             "str_tipo_id": customer.document_type,
             "str_nombre_cliente": customer.name,
-            "str_apellido_cliente": customer.surname,
+            "str_apellido_cliente": customer.surname or "",
             "str_telefono_cliente": str(customer.phone),
-            "str_opcional1": customer.extra_field_1,
-            "str_opcional2": customer.extra_field_2,
-            "str_opcional3": customer.extra_field_3,
-            "str_opcional4": customer.extra_field_4,
-            "str_opcional5": customer.extra_field_5
+            "str_opcional1": customer.extra_field_1 or "",
+            "str_opcional2": customer.extra_field_2 or "",
+            "str_opcional3": customer.extra_field_3 or "",
+            "str_opcional4": customer.extra_field_4 or "",
+            "str_opcional5": customer.extra_field_5 or ""
         }
         security_payload = {
             "int_id_comercio": zona_pagos.configuration.int_id_comercio,
@@ -185,9 +185,8 @@ class ZonaPagosTest(View):
             # if root == '127.0.0.1:8000':
             #     url = f"http://{root}/payment/start/"
             # else:
-            # url = "https://pasarela.tncolombia.com.co/payment/zpstart/"
-            url = "http://127.0.0.1:8000payment/zpstart/"
-            headers = {'Content-Type': 'application/json; charset=utf-8'}
+            url = "https://pasarela.tncolombia.com.co/payment/zpstart/"
+            # url = "http://127.0.0.1:8000payment/zpstart/"
             headers = {'Content-Type': 'application/json; charset=utf-8'}
             response = requests.post(url,
                                      headers=headers,

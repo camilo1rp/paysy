@@ -50,7 +50,7 @@ class TransactionSerializer(serializers.ModelSerializer):
                         'value': {'required': False},
                         'tax': {'required': False},
                         'total': {'required': False},
-                        'status': {'required': False,},
+                        'status': {'required': False},
                         }
 
     def create(self, validated_data):

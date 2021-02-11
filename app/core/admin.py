@@ -8,21 +8,21 @@ from core import models
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ('email', 'name', 'surname',
                     'document_type', 'document', 'phone')
-
+    search_fields = ('email', 'name', 'surname', 'document', 'phone')
 
 @admin.register(models.Transaction)
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('id_pago', 'pay_details', 'status',
                     'customer', 'total', 'details', 'create_date')
-
+    search_fields = ('id_pago', 'pay_details', 'total', 'create_date', 'details')
 
 @admin.register(models.PayGateWay)
-class TransactionAdmin(admin.ModelAdmin):
+class PayGWAdmin(admin.ModelAdmin):
     list_display = ('name', 'prefix', 'is_active')
-
+    search_fields = ('name', 'prefix', 'is_active')
 
 @admin.register(models.ZonaPagos)
-class TransactionAdmin(admin.ModelAdmin):
+class ZonaPagosAdmin(admin.ModelAdmin):
     list_display = ('name', 'gateway', 'configuration')
 
 

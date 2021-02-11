@@ -41,13 +41,13 @@ class Customer(models.Model):
     document_type = models.CharField(max_length=255)
     document = models.CharField(max_length=255)
     name = models.CharField(max_length=127)
-    surname = models.CharField(max_length=127)
+    surname = models.CharField(max_length=127, null=True, blank=True)
     phone = models.BigIntegerField()
-    extra_field_1 = models.CharField(max_length=127)
-    extra_field_2 = models.CharField(max_length=127)
-    extra_field_3 = models.CharField(max_length=127)
-    extra_field_4 = models.CharField(max_length=127)
-    extra_field_5 = models.CharField(max_length=127)
+    extra_field_1 = models.CharField(max_length=127, null=True, blank=True)
+    extra_field_2 = models.CharField(max_length=127, null=True, blank=True)
+    extra_field_3 = models.CharField(max_length=127, null=True, blank=True)
+    extra_field_4 = models.CharField(max_length=127, null=True, blank=True)
+    extra_field_5 = models.CharField(max_length=127, null=True, blank=True)
 
     def __str__(self):
         return f'Customer: {self.name} {self.surname}, {self.email} '
